@@ -5,10 +5,11 @@ namespace TcpChatListenerApp
 {
     public class TcpChatServer
     {
-        IPAddress address = IPAddress.Loopback; //IPAddress.Parse("192.168.0.158"); //
-        int port = 5000;
-        TcpListener listener;
-        List<TcpChatClient> clients;
+        private IPAddress address = IPAddress.Loopback; //IPAddress.Parse("192.168.0.158"); //
+        private int port = 5000;
+        private TcpListener listener;
+        private List<TcpChatClient> clients;
+        private Random random = new Random();
 
         public TcpChatServer()
         {
@@ -26,7 +27,7 @@ namespace TcpChatListenerApp
                 while(true)
                 {
                     TcpClient tcpClient = await listener.AcceptTcpClientAsync();
-                    TcpChatClient client = new(tcpClient, this);
+                    TcpChatClient client = new TcpChatClient(tcpClient, this, random);
 
                     clients.Add(client);
                     Task.Run(client.ProcessAsync);

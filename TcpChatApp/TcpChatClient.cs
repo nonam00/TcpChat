@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Drawing;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TcpChatListenerApp
 {
@@ -13,6 +9,7 @@ namespace TcpChatListenerApp
         private TcpChatServer server;
         public string Id { get; } = Guid.NewGuid().ToString();
         public string Name { get; set; } = null!;
+        public Color Color { get; set; } // Color for user messages in chat
         public StreamWriter Writer { get; }
         public StreamReader Reader { get; }
 
@@ -22,7 +19,7 @@ namespace TcpChatListenerApp
             await server.MessageSendAsync(Id, message);
         }
 
-        public TcpChatClient(TcpClient client, TcpChatServer server)
+        public TcpChatClient(TcpClient client, TcpChatServer server, Random random)
         {
             this.client = client;
             this.server = server;
@@ -30,6 +27,13 @@ namespace TcpChatListenerApp
             var stream = client.GetStream();
             Writer = new StreamWriter(stream);
             Reader = new StreamReader(stream);
+
+            Color = Color.FromArgb(random.Next(256), random.Next(256), random.Next(256));
+
+            if (Color == Color.White)
+            {
+                Color = Color.Black;
+            }
         }
 
         public async Task ProcessAsync()
@@ -56,6 +60,7 @@ namespace TcpChatListenerApp
                         }
 
                         message = $"{Name}: {message}";
+                        await SendAndWrite($"<{Color.ToArgb()}>");
                         await SendAndWrite(message);
                     }
                     catch (Exception ex)

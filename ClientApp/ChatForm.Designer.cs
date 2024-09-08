@@ -55,10 +55,11 @@
             // 
             listBox1.FormattingEnabled = true;
             listBox1.ItemHeight = 15;
-            listBox1.Location = new Point(107, 25);
+            listBox1.Location = new Point(154, 53);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(554, 274);
+            listBox1.Size = new Size(463, 214);
             listBox1.TabIndex = 2;
+            listBox1.DrawItem += listBox1_DrawItem;
             // 
             // ChatForm
             // 
